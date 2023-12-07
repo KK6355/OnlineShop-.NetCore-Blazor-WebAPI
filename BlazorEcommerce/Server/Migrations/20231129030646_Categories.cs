@@ -32,7 +32,7 @@ namespace BlazorEcommerce.Server.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Name", "Url" },
-                values: new object[] { 1, "Books", "boooks" });
+                values: new object[] { 1, "Books", "books" });
 
             migrationBuilder.InsertData(
                 table: "Categories",

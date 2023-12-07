@@ -10,7 +10,7 @@
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Category>().HasData(
-				new Category { Id = 1, Name="Books",   Url="boooks"},
+				new Category { Id = 1, Name="Books",   Url="books"},
 				new Category { Id = 2, Name = "Movies", Url = "movies" },
 				new Category { Id = 3, Name = "Vedio Games", Url = "vedio ganes" }
 			);
