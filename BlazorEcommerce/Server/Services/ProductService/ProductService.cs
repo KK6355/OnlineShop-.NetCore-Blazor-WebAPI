@@ -1,4 +1,6 @@
 ﻿
+using System.Reflection.Metadata.Ecma335;
+
 namespace BlazorEcommerce.Server.Services.ProductService
 {
 	public class ProductService : IProductService
@@ -42,5 +44,46 @@ namespace BlazorEcommerce.Server.Services.ProductService
 			};
 			return response;
         }
-    }
+
+		public async Task<ServiceResponse<List<string>>> GetProductSearchSuggestion(string searchText)
+		{
+			var products =await FindProductsBySearchText(searchText);
+			List<string> result = new List<string>();
+			foreach (var product in products)
+			{
+				if (product.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+				{
+					result.Add(product.Title);
+				}
+				if (product.Description != null)
+				{
+					var puntuation = product.Description.Where(char.IsPunctuation).Distinct().ToArray();
+					var words = product.Description.Split().Select(s => s.Trim(puntuation));
+					foreach (var word in words)
+					{
+						if(word.Contains(searchText,StringComparison.OrdinalIgnoreCase) && !result.Contains(searchText))
+						{ result.Add(word); }
+					}
+				}
+			}
+			return new ServiceResponse<List<string>> { Data = result };
+
+		}
+
+		public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
+		{
+			var response = new ServiceResponse<List<Product>>
+			{
+				Data = await FindProductsBySearchText(searchText)
+
+			};
+			return response;
+		}
+
+		private async Task<List<Product>> FindProductsBySearchText(string searchText)
+		{
+			return await _context.Products.Where(p => p.Title.ToLower().Contains(searchText.ToLower())
+							|| p.Description.ToLower().Contains(searchText.ToLower())).Include(p => p.Variants).ToListAsync();
+		}
+	}
 }

@@ -2,7 +2,7 @@
 @implements IDisposable
 @if (ProductService.Products == null || ProductService.Products.Count == 0)
 {
-	<span>Loading Product...</span>	
+	<span>@ProductService.Message</span>	
 } else {
 <ul class="list-unstyled">
 		@foreach (var product in ProductService.Products)
